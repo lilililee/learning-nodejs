@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ball</title>
+	<style type="text/css">
+		.ball{
+			width: 40px;
+			height: 40px;
+			border-radius: 20px;
+		}
+		.ball1{
+			background: red;
+		}
+		.ball2{
+			background: blue;
+		}
+		.ball3{
+			background: green;
+		}
+	</style>
+</head>
+<body>
+	<div class="ball ball1" style="margin-left: 0"></div>
+	<div class="ball ball2" style="margin-left: 0"></div>
+	<div class="ball ball3" style="margin-left: 0"></div>
+
+	<script type="text/javascript" src="./node_modules/bluebird/js/browser/bluebird.js"></script>
+	<script type="text/javascript">
+		var ball1 = document.querySelector('.ball1');
+		var ball2 = document.querySelector('.ball2');
+		var ball3 = document.querySelector('.ball3');
+		var count = 0;
+		function animation(ball,distance,callback) {
+			setTimeout(function(){
+				//用parseInt去掉单位 px
+				var left = parseInt(ball.style.marginLeft,10);
+				if(left == distance){
+					//先判断callback存不存在，防止报错。
+					callback && callback();
+					return;		//必须加上ruturn,不然一致回调
+				}else if(left < distance){
+					left++;
+				}else{
+					left--;
+				}
+				console.log(count++);	//测试调用次数
+				ball.style.marginLeft = left + 'px';
+				animation(ball,distance,callback);
+
+			},13);	//60帧/s
+		}
+
+		// animation(ball1,100,function(){
+		// 	animation(ball2,200,function(){
+		// 		animation(ball3,300,function(){
+		// 			animation(ball1,150,function(){
+		// 				animation(ball2,150,function(){
+		// 					animation(ball3,150,function(){
+		// 						alert('ok!');
+		// 					});
+		// 				});
+		// 			});
+		// 		});
+		// 	});
+		// });
+
+		//Promise已成为ES6的标准，有原生的Promise对象，火狐，谷歌，Safari支持，IE不支持
+		//引入bluebird.js会在全局生成一个Promise对象，可让IE8+支持
+		//var Promise = window.Promise;		//加上这句代码，IE8就不支持了，原因未知
+
+		//Promise只有三种状态：1.未完成(pending);2.已完成(fulfilled);3.失败(rejected)
+		function promiseAnimation(ball,distance){
+			return new Promise(function(resolve,reject){
+				function _animation() {
+					setTimeout(function(){
+						//用parseInt去掉单位 px
+						var left = parseInt(ball.style.marginLeft,10);
+						if(left === distance){
+							resolve();
+							return;		//必须加上ruturn,不然一致回调
+						}else if(left < distance){
+							left++;
+						}else{
+							left--;
+						}
+						console.log(count++ +''+ ball.className);	//测试调用次数
+						ball.style.marginLeft = left + 'px';
+						_animation();
+
+					},13);	//60帧/s
+				}
+				_animation();
+			});
+		}
+
+		promiseAnimation(ball1,100)
+			.then(function(){
+				return promiseAnimation(ball2,200);
+			})
+			.then(function(){
+				return promiseAnimation(ball3,300);
+			})
+			.then(function(){
+				return promiseAnimation(ball1,150);
+			})
+			.then(function(){
+				return promiseAnimation(ball2,150);
+			})
+			.then(function(){
+				return promiseAnimation(ball3,150);
+			})
+			
+	</script>
+</body>
+</html>
