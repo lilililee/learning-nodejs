@@ -38,7 +38,7 @@
 				if(left == distance){
 					//先判断callback存不存在，防止报错。
 					callback && callback();
-					return;		//必须加上ruturn,不然一致回调
+					//return;		//必须加上ruturn,不然一直回调
 				}else if(left < distance){
 					left++;
 				}else{
@@ -57,7 +57,7 @@
 		// 			animation(ball1,150,function(){
 		// 				animation(ball2,150,function(){
 		// 					animation(ball3,150,function(){
-		// 						alert('ok!');
+		// 						//alert('ok!');
 		// 					});
 		// 				});
 		// 			});
@@ -72,19 +72,20 @@
 		//Promise只有三种状态：1.未完成(pending);2.已完成(fulfilled);3.失败(rejected)
 		function promiseAnimation(ball,distance){
 			return new Promise(function(resolve,reject){
+				//console.log(11111111)
 				function _animation() {
 					setTimeout(function(){
 						//用parseInt去掉单位 px
 						var left = parseInt(ball.style.marginLeft,10);
 						if(left === distance){
 							resolve();
-							return;		//必须加上ruturn,不然一致回调
+							return;		//必须加上ruturn,不然一直回调
 						}else if(left < distance){
 							left++;
 						}else{
 							left--;
 						}
-						console.log(count++ +''+ ball.className);	//测试调用次数
+						//console.log(count++ +''+ ball.className);	//测试调用次数
 						ball.style.marginLeft = left + 'px';
 						_animation();
 
@@ -93,7 +94,7 @@
 				_animation();
 			});
 		}
-
+		//console.log(2222222)	
 		promiseAnimation(ball1,100)
 			.then(function(){
 				return promiseAnimation(ball2,200);
@@ -110,7 +111,7 @@
 			.then(function(){
 				return promiseAnimation(ball3,150);
 			})
-			
+		//console.log(3333333)	
 	</script>
 </body>
 </html>
