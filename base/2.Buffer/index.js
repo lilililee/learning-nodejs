@@ -26,3 +26,4 @@ let buf = Buffer.alloc(10, 266)
 // }
 
 // console.log(buf.toJSON())  // { type: 'Buffer',data: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ] }
+
